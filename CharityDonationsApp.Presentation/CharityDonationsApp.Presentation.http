@@ -1,0 +1,6 @@
+@CharityDonationsApp.Presentation_HostAddress = http://localhost:5186
+
+GET {{CharityDonationsApp.Presentation_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
