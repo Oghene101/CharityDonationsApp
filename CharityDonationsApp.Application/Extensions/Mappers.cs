@@ -2,8 +2,10 @@ using CharityDonationsApp.Application.Common.Contracts;
 using CharityDonationsApp.Application.Features.Admin.Commands;
 using CharityDonationsApp.Application.Features.Auth;
 using CharityDonationsApp.Application.Features.Auth.Commands;
+using CharityDonationsApp.Application.Features.User.Commands;
 using CharityDonationsApp.Domain.Entities;
 using RefreshToken = CharityDonationsApp.Application.Features.Auth.Commands.RefreshToken;
+using User = CharityDonationsApp.Domain.Entities.User;
 
 namespace CharityDonationsApp.Application.Extensions;
 
@@ -20,6 +22,18 @@ public static class Mappers
             UserName = dto.Email,
             CreatedBy = $"{dto.FirstName} {dto.LastName}",
             UpdatedBy = $"{dto.FirstName} {dto.LastName}"
+        };
+
+    public static Address ToEntity(this AddAddress.Command dto)
+        => new()
+        {
+            HouseNumber = dto.HouseNumber,
+            Landmark = dto.Landmark,
+            Street = dto.Street,
+            Lga = dto.Lga,
+            City = dto.City,
+            State = dto.State,
+            Country = dto.Country,
         };
 
     #endregion
@@ -39,7 +53,7 @@ public static class Mappers
         => new(dto.AccessToken, dto.RefreshToken);
 
     public static ChangePassword.Command ToCommand(this Auth.ChangePasswordRequest dto)
-        => new(dto.Email, dto.OldPassword, dto.NewPassword);
+        => new(dto.OldPassword, dto.NewPassword);
 
     public static SendEmailConfirmation.Command ToCommand(this Admin.SendEmailConfirmationRequest dto)
         => new(dto.Email);
@@ -49,6 +63,15 @@ public static class Mappers
 
     public static ResetPasswordRequest.Command ToCommand(this Auth.ResetPasswordRequest dto)
         => new(dto.Email, dto.Token, dto.NewPassword);
+
+    public static AddBvn.Command ToCommand(this Common.Contracts.User.AddBvnRequest dto)
+        => new(dto.Bvn);
+
+    public static AddNin.Command ToCommand(this Common.Contracts.User.AddNinRequest dto)
+        => new(dto.Nin);
+
+    public static AddAddress.Command ToCommand(this Common.Contracts.User.AddAddressRequest dto)
+        => new(dto.HouseNumber, dto.Landmark, dto.Street, dto.Lga, dto.City, dto.State, dto.Country);
 
     #endregion
 }

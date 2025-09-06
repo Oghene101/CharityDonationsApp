@@ -2,7 +2,6 @@ using System.Security.Claims;
 using CharityDonationsApp.Application.Common.Contracts;
 using CharityDonationsApp.Application.Common.Contracts.Abstractions;
 using CharityDonationsApp.Application.Common.Exceptions;
-using CharityDonationsApp.Domain.Entities;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -15,7 +14,7 @@ public static class RefreshToken
 
     public class Handler(
         IJwtService jwt,
-        UserManager<User> userManager,
+        UserManager<Domain.Entities.User> userManager,
         IUnitOfWork uOw) : IRequestHandler<Command, Result<Jwt.GenerateTokenResponse>>
     {
         public async Task<Result<Jwt.GenerateTokenResponse>> Handle(Command request,
@@ -39,9 +38,9 @@ public static class RefreshToken
         }
     }
 
-    public class CommandValidator : AbstractValidator<Command>
+    public class Validator : AbstractValidator<Command>
     {
-        public CommandValidator()
+        public Validator()
         {
             RuleFor(x => x.AccessToken)
                 .NotEmpty().WithMessage("Access token is required");

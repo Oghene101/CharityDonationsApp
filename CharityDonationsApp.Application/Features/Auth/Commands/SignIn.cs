@@ -1,7 +1,6 @@
 using CharityDonationsApp.Application.Common.Contracts;
 using CharityDonationsApp.Application.Common.Contracts.Abstractions;
 using CharityDonationsApp.Application.Common.Exceptions;
-using CharityDonationsApp.Domain.Entities;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -13,7 +12,7 @@ public static class SignIn
     public record Command(string Email, string Password) : IRequest<Result<Common.Contracts.Auth.SignInResponse>>;
 
     public class Handler(
-        UserManager<User> userManager,
+        UserManager<Domain.Entities.User> userManager,
         IJwtService jwt,
         IUtilityService utility) : IRequestHandler<Command, Result<Common.Contracts.Auth.SignInResponse>>
     {
@@ -32,7 +31,8 @@ public static class SignIn
 
             var signInTokenCacheKey = user.Email + SignInTokenCacheKey;
             var userRolesCacheKey = user.Email + UserRolesCacheKey;
-            if (!utility.TryGetInMemoryCacheValue(signInTokenCacheKey, out Jwt.GenerateTokenResponse? generateTokenResponse) ||
+            if (!utility.TryGetInMemoryCacheValue(signInTokenCacheKey,
+                    out Jwt.GenerateTokenResponse? generateTokenResponse) ||
                 !utility.TryGetInMemoryCacheValue(userRolesCacheKey, out IList<string>? roles))
             {
                 roles = await userManager.GetRolesAsync(user);
@@ -49,9 +49,9 @@ public static class SignIn
         }
     }
 
-    public class CommandValidator : AbstractValidator<Command>
+    public class Validator : AbstractValidator<Command>
     {
-        public CommandValidator()
+        public Validator()
         {
             RuleFor(x => x.Email)
                 .NotEmpty().WithMessage("Email is required")

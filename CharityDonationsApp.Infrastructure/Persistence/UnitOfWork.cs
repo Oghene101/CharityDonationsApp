@@ -23,12 +23,40 @@ public class UnitOfWork(
 
     private IRefreshTokenRepository? _refreshTokensRead;
     private IRepository<RefreshToken>? _refreshTokensWrite;
+    private IKycVerificationRepository? _kycVerificationsRead;
+    private IRepository<KycVerification>? _kycVerificationsWrite;
+    private IAddressRepository? _addressesRead;
+    private IRepository<Address>? _addressesWrite;
+
+    #region RefreshTokens
 
     public IRefreshTokenRepository RefreshTokensReadRepository =>
         _refreshTokensRead ??= new RefreshTokenRepository(connectionFactory);
 
     public IRepository<RefreshToken> RefreshTokensWriteRepository =>
         _refreshTokensWrite ??= new Repository<RefreshToken>(context);
+
+    #endregion
+
+    #region KycVerifications
+
+    public IKycVerificationRepository KycVerificationsReadRepository =>
+        _kycVerificationsRead ??= new KycVerificationRepository(connectionFactory);
+
+    public IRepository<KycVerification> KycVerificationsWriteRepository =>
+        _kycVerificationsWrite ??= new Repository<KycVerification>(context);
+
+    #endregion
+
+    #region Addresses
+
+    public IAddressRepository AddressesReadRepository =>
+        _addressesRead ??= new AddressRepository(connectionFactory);
+
+    public IRepository<Address> AddressesWriteRepository =>
+        _addressesWrite ??= new Repository<Address>(context);
+
+    #endregion
 
     # endregion
 

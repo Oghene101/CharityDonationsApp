@@ -10,7 +10,7 @@ public class Wallet : BaseEntity
     [Required, MaxLength(50)] public string BankName { get; set; } = string.Empty;
     [Required, MaxLength(10)] public string AccountNumber { get; set; } = string.Empty;
     [Required, MaxLength(150)] public string AccountName { get; set; } = string.Empty;
-    [Required, Precision(18, 2)]public decimal AccountBalance { get; set; }
+    [Required, Precision(18, 2)] public decimal AccountBalance { get; set; }
     [Required] public Guid UserId { get; set; }
     [Required] public Guid EventId { get; set; }
 

@@ -4,6 +4,7 @@ using CharityDonationsApp.Infrastructure.Persistence.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CharityDonationsApp.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250905193413_AddCompositeUniqueIndexInAddresses")]
+    partial class AddCompositeUniqueIndexInAddresses
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -29,13 +32,13 @@ namespace CharityDonationsApp.Infrastructure.Migrations
 
                     b.Property<string>("City")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("Country")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("datetimeoffset");
@@ -58,25 +61,26 @@ namespace CharityDonationsApp.Infrastructure.Migrations
 
                     b.Property<string>("Landmark")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("Lga")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("State")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("Street")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<DateTimeOffset>("UpdatedAt")
+                        .HasMaxLength(150)
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("UpdatedBy")
@@ -136,6 +140,7 @@ namespace CharityDonationsApp.Infrastructure.Migrations
                         .HasColumnType("nvarchar(150)");
 
                     b.Property<DateTimeOffset>("UpdatedAt")
+                        .HasMaxLength(150)
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("UpdatedBy")
@@ -203,6 +208,7 @@ namespace CharityDonationsApp.Infrastructure.Migrations
                         .HasColumnType("datetimeoffset");
 
                     b.Property<DateTimeOffset>("UpdatedAt")
+                        .HasMaxLength(150)
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("UpdatedBy")
@@ -257,6 +263,7 @@ namespace CharityDonationsApp.Infrastructure.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<DateTimeOffset>("UpdatedAt")
+                        .HasMaxLength(150)
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("UpdatedBy")
@@ -303,6 +310,7 @@ namespace CharityDonationsApp.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTimeOffset>("UpdatedAt")
+                        .HasMaxLength(150)
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("UpdatedBy")
@@ -450,6 +458,7 @@ namespace CharityDonationsApp.Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTimeOffset>("UpdatedAt")
+                        .HasMaxLength(150)
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("UpdatedBy")

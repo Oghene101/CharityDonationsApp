@@ -17,10 +17,10 @@ public class ApiException(
 
     public static ApiException NotFound(Error error, string message = "The requested resource was not found.")
         => new("Not Found", message, [error], HttpStatusCode.NotFound);
-    
+
     public static ApiException BadRequest(Error error, string message = "Invalid request parameters.")
         => new("Bad Request", message, [error], HttpStatusCode.BadRequest);
-    
+
     public static ApiException BadRequest(Error[] errors, string message = "Invalid request parameters.")
         => new("Bad Request", message, errors, HttpStatusCode.BadRequest);
 

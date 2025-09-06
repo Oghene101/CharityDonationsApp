@@ -48,7 +48,7 @@ public static class DbSeeder
                 throw new Exception(string.Join(", ", result.Errors.Select(e => e.Description)));
             }
         }
-        
+
         // Seed a user
         var users = await userManager.GetUsersInRoleAsync(Roles.User);
         if (users.Count == 0)

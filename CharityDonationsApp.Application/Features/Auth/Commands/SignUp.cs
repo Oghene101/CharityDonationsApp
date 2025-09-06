@@ -3,7 +3,6 @@ using CharityDonationsApp.Application.Common.Contracts.Abstractions;
 using CharityDonationsApp.Application.Common.Exceptions;
 using CharityDonationsApp.Application.Extensions;
 using CharityDonationsApp.Domain.Constants;
-using CharityDonationsApp.Domain.Entities;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -20,7 +19,7 @@ public static class SignUp
         string Password) : IRequest<Result<Guid>>;
 
     public class Handler(
-        UserManager<User> userManager,
+        UserManager<Domain.Entities.User> userManager,
         IBackgroundTaskQueue queue,
         IAuthService auth,
         ILogger<Handler> logger) : IRequestHandler<Command, Result<Guid>>
@@ -75,9 +74,9 @@ public static class SignUp
         }
     }
 
-    public class CommandValidator : AbstractValidator<Command>
+    public class Validator : AbstractValidator<Command>
     {
-        public CommandValidator()
+        public Validator()
         {
             RuleFor(x => x.FirstName)
                 .NotEmpty().WithMessage("First name is required")

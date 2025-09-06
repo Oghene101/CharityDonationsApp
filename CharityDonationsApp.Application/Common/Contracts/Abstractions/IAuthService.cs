@@ -1,10 +1,11 @@
-using CharityDonationsApp.Domain.Entities;
-
 namespace CharityDonationsApp.Application.Common.Contracts.Abstractions;
 
 public interface IAuthService
 {
-    Task SendEmailConfirmationAsync(User user, CancellationToken cancellationToken = default);
-    Task SendForgotPasswordEmailAsync(User user, CancellationToken cancellationToken = default);
+    string GetSignedInUserId();
+    string GetSignedInUserEmail();
+    string GetSignedInUserName();
+    Task SendEmailConfirmationAsync(Domain.Entities.User user, CancellationToken cancellationToken = default);
 
+    Task SendForgotPasswordEmailAsync(Domain.Entities.User user, CancellationToken cancellationToken = default);
 }

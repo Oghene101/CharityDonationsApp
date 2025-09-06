@@ -12,7 +12,9 @@ public static class Auth
 
     public record RefreshTokenRequest(string AccessToken, string RefreshToken);
 
-    public record ChangePasswordRequest(string Email, string OldPassword, string NewPassword);
+    public record ChangePasswordRequest(string OldPassword, string NewPassword);
+
     public record ForgotPasswordRequest(string Email);
+
     public record ResetPasswordRequest(string Email, string Token, string NewPassword);
 }

@@ -12,6 +12,6 @@ public abstract class BaseEntity : IAuditable
 
     [Required] public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
     [Required, MaxLength(150)] public string CreatedBy { get; set; } = string.Empty;
-    [Required, MaxLength(150)] public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.UtcNow;
+    [Required] public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.UtcNow;
     [Required, MaxLength(150)] public string UpdatedBy { get; set; } = string.Empty;
 }

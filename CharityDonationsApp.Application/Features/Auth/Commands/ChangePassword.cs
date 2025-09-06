@@ -1,7 +1,6 @@
 using CharityDonationsApp.Application.Common.Contracts;
 using CharityDonationsApp.Application.Common.Contracts.Abstractions;
 using CharityDonationsApp.Application.Common.Exceptions;
-using CharityDonationsApp.Domain.Entities;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -11,21 +10,19 @@ namespace CharityDonationsApp.Application.Features.Auth.Commands;
 public static class ChangePassword
 {
     public record Command(
-        string Email,
         string OldPassword,
         string NewPassword) : IRequest<Result<string>>;
 
     public class Handler(
-        UserManager<User> userManager,
-        IUtilityService utility,
+        UserManager<Domain.Entities.User> userManager,
+        IAuthService auth,
         IUnitOfWork uOw) : IRequestHandler<Command, Result<string>>
     {
         public async Task<Result<string>> Handle(Command request, CancellationToken cancellationToken)
         {
-            var email = utility.GetSignedInUserEmail();
-            if (email != request.Email) throw ApiException.Unauthorized(new Error("Auth.Error", "Invalid token"));
+            var email = auth.GetSignedInUserEmail();
 
-            var user = await userManager.FindByEmailAsync(request.Email);
+            var user = await userManager.FindByEmailAsync(email);
             if (user is null) throw ApiException.NotFound(new Error("Auth.Error", $"User with '{email}' not found"));
 
             var isCorrectPassword = await userManager.CheckPasswordAsync(user, request.OldPassword);
@@ -44,14 +41,10 @@ public static class ChangePassword
         }
     }
 
-    public class CommandValidator : AbstractValidator<Command>
+    public class Validator : AbstractValidator<Command>
     {
-        public CommandValidator()
+        public Validator()
         {
-            RuleFor(x => x.Email)
-                .NotEmpty().WithMessage("Email is required")
-                .EmailAddress().WithMessage("Email must be a valid email address");
-
             RuleFor(x => x.OldPassword)
                 .NotEmpty().WithMessage("Old password is required");
 

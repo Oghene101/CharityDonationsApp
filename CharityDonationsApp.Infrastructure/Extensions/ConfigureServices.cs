@@ -89,7 +89,7 @@ public static class ConfigureServices
         services.AddOptions<JwtSettings>()
             .BindConfiguration(JwtSettings.Path)
             .ValidateOnStart();
-        
+
         services.AddOptions<ApiEndpoints>()
             .BindConfiguration(ApiEndpoints.Path)
             .ValidateOnStart();
@@ -121,6 +121,8 @@ public static class ConfigureServices
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
         services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+        services.AddScoped<IKycVerificationRepository, KycVerificationRepository>();
+        services.AddScoped<IAddressRepository, AddressRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
     }
 

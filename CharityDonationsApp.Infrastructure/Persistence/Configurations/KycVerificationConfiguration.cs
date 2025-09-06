@@ -11,7 +11,7 @@ public class KycVerificationConfiguration(
 {
     public void Configure(EntityTypeBuilder<KycVerification> builder)
     {
-        builder.HasIndex(k => k.UserId);
+        builder.HasIndex(k => k.UserId).IsUnique();
         builder.HasIndex(k => k.BvnHash).IsUnique();
         builder.HasIndex(k => k.NinHash).IsUnique();
         builder.Property(k => k.BvnCipher).HasConversion(new EncryptedConverter(encryptionProvider));

@@ -1,7 +1,6 @@
 using CharityDonationsApp.Application.Common.Contracts;
 using CharityDonationsApp.Application.Common.Contracts.Abstractions;
 using CharityDonationsApp.Application.Common.Exceptions;
-using CharityDonationsApp.Domain.Entities;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -13,7 +12,7 @@ public static class ForgotPassword
     public record Command(string Email) : IRequest<Result<string>>;
 
     public class Handler(
-        UserManager<User> userManager,
+        UserManager<Domain.Entities.User> userManager,
         IAuthService auth) : IRequestHandler<Command, Result<string>>
     {
         public async Task<Result<string>> Handle(Command request, CancellationToken cancellationToken)
@@ -27,9 +26,9 @@ public static class ForgotPassword
         }
     }
 
-    public class CommandValidator : AbstractValidator<Command>
+    public class Validator : AbstractValidator<Command>
     {
-        public CommandValidator()
+        public Validator()
         {
             RuleFor(x => x.Email)
                 .NotEmpty().WithMessage("Email is required")
