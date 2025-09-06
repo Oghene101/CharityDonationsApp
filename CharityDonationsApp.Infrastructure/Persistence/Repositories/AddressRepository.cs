@@ -19,7 +19,7 @@ public class AddressRepository(
         var result = await connection.QueryAsync<Address>(sql, new { kycVerificationId });
         return result;
     }
-    
+
     public async Task<IEnumerable<Address>> GetMostRecentAddressAsync(Guid kycVerificationId)
     {
         using var connection = connectionFactory.CreateConnection();

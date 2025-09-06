@@ -14,10 +14,12 @@ public static class SignIn
     public class Handler(
         UserManager<Domain.Entities.User> userManager,
         IJwtService jwt,
+        IAuthService auth,
         IUtilityService utility) : IRequestHandler<Command, Result<Common.Contracts.Auth.SignInResponse>>
     {
         private const string SignInTokenCacheKey = "UserAuthToken";
         private const string UserRolesCacheKey = "UserRoles";
+        private const string FailedLoginCacheKey = "FailedLogin";
 
         public async Task<Result<Common.Contracts.Auth.SignInResponse>> Handle(Command request,
             CancellationToken cancellationToken)
@@ -25,12 +27,28 @@ public static class SignIn
             var user = await userManager.FindByEmailAsync(request.Email);
             if (user is null) throw ApiException.BadRequest(new Error("Auth.Error", "Incorrect email or password"));
 
-            var isCorrectPassword = await userManager.CheckPasswordAsync(user, request.Password);
-            if (isCorrectPassword is false)
-                throw ApiException.BadRequest(new Error("Auth.Error", "Incorrect email or password"));
+            if (await userManager.IsLockedOutAsync(user))
+                throw ApiException.BadRequest(new Error("Auth.Error",
+                    $"Your account has been locked for {(user.LockoutEnd! - DateTimeOffset.UtcNow).Value.TotalSeconds} seconds. Try again later"));
+
+            var failedLoginCacheKey = user.Email + FailedLoginCacheKey;
+            utility.TryGetInMemoryCacheValue(failedLoginCacheKey, out int? failedLoginAttempts);
+            failedLoginAttempts ??= 0;
+
+            await auth.CheckPassword(new Authentication.CheckPasswordRequest(user,
+                request.Password, failedLoginAttempts.Value, failedLoginCacheKey));
+
+            if (user.LockoutCount != 0)
+            {
+                user.LockoutCount = 0;
+            }
+
+            utility.RemoveInMemoryCache(failedLoginCacheKey);
+            await userManager.ResetAccessFailedCountAsync(user);
 
             var signInTokenCacheKey = user.Email + SignInTokenCacheKey;
             var userRolesCacheKey = user.Email + UserRolesCacheKey;
+
             if (!utility.TryGetInMemoryCacheValue(signInTokenCacheKey,
                     out Jwt.GenerateTokenResponse? generateTokenResponse) ||
                 !utility.TryGetInMemoryCacheValue(userRolesCacheKey, out IList<string>? roles))

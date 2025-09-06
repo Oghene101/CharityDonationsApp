@@ -40,6 +40,8 @@ public static class Mappers
 
     #region To Command
 
+    #region Auth
+
     public static SignUp.Command ToCommand(this Auth.SignUpRequest dto)
         => new(dto.FirstName, dto.LastName, dto.Email, dto.Password);
 
@@ -55,14 +57,15 @@ public static class Mappers
     public static ChangePassword.Command ToCommand(this Auth.ChangePasswordRequest dto)
         => new(dto.OldPassword, dto.NewPassword);
 
-    public static SendEmailConfirmation.Command ToCommand(this Admin.SendEmailConfirmationRequest dto)
-        => new(dto.Email);
-
     public static ForgotPassword.Command ToCommand(this Auth.ForgotPasswordRequest dto)
         => new(dto.Email);
 
     public static ResetPasswordRequest.Command ToCommand(this Auth.ResetPasswordRequest dto)
         => new(dto.Email, dto.Token, dto.NewPassword);
+
+    #endregion
+
+    #region User
 
     public static AddBvn.Command ToCommand(this Common.Contracts.User.AddBvnRequest dto)
         => new(dto.Bvn);
@@ -72,6 +75,18 @@ public static class Mappers
 
     public static AddAddress.Command ToCommand(this Common.Contracts.User.AddAddressRequest dto)
         => new(dto.HouseNumber, dto.Landmark, dto.Street, dto.Lga, dto.City, dto.State, dto.Country);
+
+    #endregion
+
+    #region Admin
+
+    public static SendEmailConfirmation.Command ToCommand(this Admin.SendEmailConfirmationRequest dto)
+        => new(dto.Email);
+
+    public static FastForwardLockoutEnd.Command ToCommand(this Admin.FastForwardLockOutEndRequest dto)
+        => new(dto.Email);
+
+    #endregion
 
     #endregion
 }

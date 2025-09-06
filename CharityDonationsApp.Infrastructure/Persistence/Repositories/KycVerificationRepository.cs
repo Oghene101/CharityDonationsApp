@@ -50,7 +50,7 @@ public class KycVerificationRepository(
                 },
                 new { userId },
                 splitOn: "Id");
-        
-        return dictionary.Values.FirstOrDefault();
+
+        return dictionary.Values.SingleOrDefault();
     }
 }

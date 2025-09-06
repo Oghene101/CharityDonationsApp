@@ -6,3 +6,12 @@ public static class Jwt
 
     public record GenerateTokenResponse(string AccessToken, int ExpireMinutes, string RefreshToken);
 }
+
+public static class Authentication
+{
+    public record CheckPasswordRequest(
+        Domain.Entities.User User,
+        string Password,
+        int FailedLoginAttempts,
+        string FailedLoginCacheKey);
+}

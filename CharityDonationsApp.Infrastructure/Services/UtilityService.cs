@@ -15,6 +15,11 @@ public class UtilityService(
             TimeSpan.FromSeconds(Math.Max(absoluteExpirationRelativeToNow.TotalSeconds,
                 absoluteExpirationRelativeToNow.TotalSeconds - 60)));
 
+    public void SetInMemoryCache<TItem>(object key, TItem value, MemoryCacheEntryOptions options)
+    {
+        memoryCache.Set(key, value, options);
+    }
+
     public bool TryGetInMemoryCacheValue<TItem>(string key, out TItem? value)
         => memoryCache.TryGetValue(key, out value);
 

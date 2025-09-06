@@ -9,6 +9,7 @@ public class User : IdentityUser<Guid>, IAuditable
     public override Guid Id { get; set; } = Guid.CreateVersion7();
     [Required, MaxLength(50)] public string FirstName { get; set; } = string.Empty;
     [Required, MaxLength(50)] public string LastName { get; set; } = string.Empty;
+    public int LockoutCount { get; set; }
     public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
     [Required, MaxLength(150)] public string CreatedBy { get; set; } = string.Empty;
     public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.UtcNow;

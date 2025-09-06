@@ -47,6 +47,9 @@ public static class ConfigureServices
                 {
                     options.User.RequireUniqueEmail = true;
                     options.Password.RequiredLength = 8;
+                    options.Lockout.AllowedForNewUsers = true;
+                    options.Lockout.MaxFailedAccessAttempts = 3;
+                    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
                 })
             .AddEntityFrameworkStores<AppDbContext>()
             .AddDefaultTokenProviders();
@@ -86,6 +89,10 @@ public static class ConfigureServices
 
     private static void AddOptions(this IServiceCollection services)
     {
+        services.AddOptions<AuthSettings>()
+            .BindConfiguration(AuthSettings.Path)
+            .ValidateOnStart();
+
         services.AddOptions<JwtSettings>()
             .BindConfiguration(JwtSettings.Path)
             .ValidateOnStart();
