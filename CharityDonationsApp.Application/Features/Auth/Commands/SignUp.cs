@@ -6,6 +6,7 @@ using CharityDonationsApp.Domain.Constants;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace CharityDonationsApp.Application.Features.Auth.Commands;
@@ -21,7 +22,7 @@ public static class SignUp
     public class Handler(
         UserManager<Domain.Entities.User> userManager,
         IBackgroundTaskQueue queue,
-        IAuthService auth,
+        IUnitOfWork uOw,
         ILogger<Handler> logger) : IRequestHandler<Command, Result<Guid>>
     {
         private static readonly string Separator = new('*', 110);
@@ -29,6 +30,8 @@ public static class SignUp
         public async Task<Result<Guid>> Handle(Command request, CancellationToken cancellationToken)
         {
             var user = request.ToEntity();
+
+            await uOw.BeginTransactionAsync(cancellationToken);
 
             var result = await userManager.CreateAsync(user, request.Password);
             if (!result.Succeeded)
@@ -39,36 +42,51 @@ public static class SignUp
             result = await userManager.AddToRoleAsync(user, Roles.User);
             if (!result.Succeeded)
             {
-                await userManager.DeleteAsync(user);
                 throw ApiException.BadRequest(
                     result.Errors.Select(e => new Error(e.Code, e.Description))
                         .ToArray());
             }
 
-            queue.QueueBackgroundWorkItem(async _ =>
+            await uOw.CommitTransactionAsync(cancellationToken);
+
+            try
             {
-                try
+                await queue.QueueBackgroundWorkItemAsync(async (sp, ct) =>
                 {
-                    await auth.SendEmailConfirmationAsync(user, cancellationToken);
-                }
-                catch (Exception ex)
-                {
-                    // log and swallow, so it doesn't crash the worker
-                    logger.LogError("""
-                                    {Separator}
-                                    Error occured while sending email confirmation
+                    try
+                    {
+                        var auth = sp.GetRequiredService<IAuthService>();
+                        await auth.SendEmailConfirmationAsync(user, ct);
+                    }
+                    catch (Exception ex)
+                    {
+                        // log and swallow, so it doesn't crash the worker
+                        logger.LogError("""
+                                        {Separator}
+                                        Error occured while sending email confirmation
 
-                                    Exception Message: {Message}
+                                        Exception Message: {Message}
 
-                                    Exception Type: {ExceptionType}
-                                    {Separator}
+                                        Exception Type: {ExceptionType}
+                                        {Separator}
 
-                                    Stack Trace: {StackTrace}
+                                        Stack Trace: {StackTrace}
 
-                                    """, Separator, ex.Message,
-                        ex.GetType().FullName ?? ex.GetType().Name, ex.StackTrace, Separator);
-                }
-            });
+                                        """, Separator, ex.Message,
+                            ex.GetType().FullName ?? ex.GetType().Name, ex.StackTrace, Separator);
+                    }
+                }, cancellationToken);
+            }
+            catch (InvalidOperationException exception)
+            {
+                logger.LogError("""
+                                {Separator} 
+
+                                Exception Message: {Message}
+
+                                {Separator}
+                                """, Separator, exception.Message, Separator);
+            }
 
             return Result.Success(user.Id);
         }

@@ -3,18 +3,29 @@ using CharityDonationsApp.Application.Common.Contracts.Abstractions;
 
 namespace CharityDonationsApp.Infrastructure.Services;
 
-public class BackgroundTaskQueue(int capacity = 100) : IBackgroundTaskQueue
+public class BackgroundTaskQueue(int capacity = 100, int timeoutMs = 500) : IBackgroundTaskQueue
 {
-    private readonly Channel<Func<CancellationToken, Task>> _queue =
-        Channel.CreateBounded<Func<CancellationToken, Task>>(capacity);
+    private readonly Channel<Func<IServiceProvider, CancellationToken, Task>> _queue =
+        Channel.CreateBounded<Func<IServiceProvider, CancellationToken, Task>>(capacity);
 
-    public void QueueBackgroundWorkItem(Func<CancellationToken, Task> workItem)
+    public async ValueTask QueueBackgroundWorkItemAsync(Func<IServiceProvider, CancellationToken, Task> workItem,
+        CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(workItem);
-        if (!_queue.Writer.TryWrite(workItem)) throw new InvalidOperationException("Queue is full");
+        using var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        cts.CancelAfter(timeoutMs);
+        try
+        {
+            await _queue.Writer.WriteAsync(workItem, cts.Token);
+        }
+        catch (OperationCanceledException)
+        {
+            throw new InvalidOperationException(
+                $"Background task queue is full (capacity {capacity}). Timed out after {timeoutMs}ms.");
+        }
     }
 
-    public async Task<Func<CancellationToken, Task>> DequeueAsync(CancellationToken cancellationToken)
+    public async Task<Func<IServiceProvider, CancellationToken, Task>> DequeueAsync(CancellationToken cancellationToken)
     {
         var workItem = await _queue.Reader.ReadAsync(cancellationToken);
         return workItem;

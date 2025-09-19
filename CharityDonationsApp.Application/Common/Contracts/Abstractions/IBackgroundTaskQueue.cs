@@ -2,6 +2,8 @@ namespace CharityDonationsApp.Application.Common.Contracts.Abstractions;
 
 public interface IBackgroundTaskQueue
 {
-    void QueueBackgroundWorkItem(Func<CancellationToken, Task> workItem);
-    Task<Func<CancellationToken, Task>> DequeueAsync(CancellationToken cancellationToken);
+    ValueTask QueueBackgroundWorkItemAsync(Func<IServiceProvider, CancellationToken, Task> workItem,
+        CancellationToken cancellationToken = default);
+
+    Task<Func<IServiceProvider, CancellationToken, Task>> DequeueAsync(CancellationToken cancellationToken);
 }

@@ -89,7 +89,7 @@ public class UnitOfWork(
 
     private async Task DisposeTransactionAsync()
     {
-        if (_transaction != null)
+        if (_transaction is not null)
         {
             await _transaction.DisposeAsync();
             _transaction = null;

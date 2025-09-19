@@ -1,4 +1,5 @@
 using CharityDonationsApp.Application.Common.Contracts.Abstractions;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
@@ -6,6 +7,7 @@ namespace CharityDonationsApp.Infrastructure.Services;
 
 public class QueuedHostedService(
     IBackgroundTaskQueue taskQueue,
+    IServiceProvider serviceProvider,
     ILogger<QueuedHostedService> logger)
     : BackgroundService
 {
@@ -24,7 +26,9 @@ public class QueuedHostedService(
             var workItem = await taskQueue.DequeueAsync(stoppingToken);
             try
             {
-                await workItem(stoppingToken);
+                using var scope = serviceProvider.CreateScope();
+                var sp = scope.ServiceProvider;
+                await workItem(sp, stoppingToken);
             }
             catch (Exception ex)
             {

@@ -8,11 +8,11 @@ using User = CharityDonationsApp.Application.Common.Contracts.User;
 
 namespace CharityDonationsApp.Presentation.Modules;
 
-public class UserModule : CarterModule
+public class KycModule : CarterModule
 {
-    public UserModule() : base("api/user")
+    public KycModule() : base("api/kyc")
     {
-        WithTags("User");
+        WithTags("Kyc");
         IncludeInOpenApi();
         RequireAuthorization();
     }

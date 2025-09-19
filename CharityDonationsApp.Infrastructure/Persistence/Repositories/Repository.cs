@@ -1,12 +1,13 @@
 using System.Linq.Expressions;
 using CharityDonationsApp.Application.Common.Contracts.Abstractions.Repositories;
+using CharityDonationsApp.Domain.Entities;
 using CharityDonationsApp.Infrastructure.Persistence.DbContexts;
 using Microsoft.EntityFrameworkCore;
 
 namespace CharityDonationsApp.Infrastructure.Persistence.Repositories;
 
 public class Repository<TEntity>(
-    AppDbContext context) : IRepository<TEntity> where TEntity : class
+    AppDbContext context) : IRepository<TEntity> where TEntity : BaseEntity
 {
     private readonly DbSet<TEntity> _dbSet = context.Set<TEntity>();
 
