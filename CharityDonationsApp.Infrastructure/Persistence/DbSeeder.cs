@@ -14,7 +14,7 @@ public static class DbSeeder
         var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
 
         // Ensure roles exist
-        foreach (var role in Roles.RolesList)
+        foreach (var role in Roles.List)
         {
             if (!await roleManager.RoleExistsAsync(role))
             {

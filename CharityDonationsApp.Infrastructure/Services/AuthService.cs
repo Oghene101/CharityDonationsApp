@@ -58,7 +58,7 @@ public class AuthService(
 
         var subject = "Confirm your email";
         var body = $"""
-                    
+
                            <p>Hello {user.FirstName},</p>
                            <p>Please confirm your email by clicking the link below:</p>
                            <p><a href='{confirmationLink}'>Confirm Email</a></p>
@@ -78,7 +78,7 @@ public class AuthService(
 
         var subject = "Reset your password";
         var body = $"""
-                    
+
                            <p>Hello {user.FirstName},</p>
                            <p>Please reset your password by clicking the link below:</p>
                            <p><a href='{passwordResetLink}'>Reset Password</a></p>
@@ -92,12 +92,12 @@ public class AuthService(
 
     public async Task<bool> CheckPassword(Authentication.CheckPasswordRequest request)
     {
-        var (user, password, failedLoginAttempts, failedLoginCacheKey) = request;
+        var (user, password) = request;
         var isCorrectPassword = await userManager.CheckPasswordAsync(user, password);
         if (isCorrectPassword) return true;
+        user.AccessFailedCount++;
 
-        failedLoginAttempts++;
-        if (failedLoginAttempts >= MaxFailedAttempts)
+        if (user.AccessFailedCount >= MaxFailedAttempts)
         {
             user.LockoutCount++;
 
@@ -109,14 +109,12 @@ public class AuthService(
             lockoutMinutes = Math.Min(lockoutMinutes, MaxLockoutMinutes);
 
             await userManager.SetLockoutEndDateAsync(user, DateTimeOffset.UtcNow.AddMinutes(lockoutMinutes));
-            utility.RemoveInMemoryCache(failedLoginCacheKey);
 
             throw ApiException.BadRequest(new Error("Auth.Error",
                 $"Your account has been locked for {(user.LockoutEnd! - DateTimeOffset.UtcNow).Value.TotalSeconds} seconds. Try again later"));
         }
 
-        utility.SetInMemoryCache(failedLoginCacheKey, failedLoginAttempts,
-            TimeSpan.FromMinutes(BaseLockoutMinutes));
+        await userManager.UpdateAsync(user);
         throw ApiException.BadRequest(new Error("Auth.Error", "Incorrect email or password"));
     }
 }

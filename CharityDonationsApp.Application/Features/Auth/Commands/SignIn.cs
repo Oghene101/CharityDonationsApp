@@ -4,6 +4,7 @@ using CharityDonationsApp.Application.Common.Exceptions;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using User = CharityDonationsApp.Domain.Entities.User;
 
 namespace CharityDonationsApp.Application.Features.Auth.Commands;
 
@@ -12,14 +13,13 @@ public static class SignIn
     public record Command(string Email, string Password) : IRequest<Result<Common.Contracts.Auth.SignInResponse>>;
 
     public class Handler(
-        UserManager<Domain.Entities.User> userManager,
+        UserManager<User> userManager,
         IJwtService jwt,
         IAuthService auth,
         IUtilityService utility) : IRequestHandler<Command, Result<Common.Contracts.Auth.SignInResponse>>
     {
         private const string SignInTokenCacheKey = "UserAuthToken";
         private const string UserRolesCacheKey = "UserRoles";
-        private const string FailedLoginCacheKey = "FailedLogin";
 
         public async Task<Result<Common.Contracts.Auth.SignInResponse>> Handle(Command request,
             CancellationToken cancellationToken)
@@ -31,19 +31,13 @@ public static class SignIn
                 throw ApiException.BadRequest(new Error("Auth.Error",
                     $"Your account has been locked for {(user.LockoutEnd! - DateTimeOffset.UtcNow).Value.TotalSeconds} seconds. Try again later"));
 
-            var failedLoginCacheKey = user.Email + FailedLoginCacheKey;
-            utility.TryGetInMemoryCacheValue(failedLoginCacheKey, out int? failedLoginAttempts);
-            failedLoginAttempts ??= 0;
-
-            await auth.CheckPassword(new Authentication.CheckPasswordRequest(user,
-                request.Password, failedLoginAttempts.Value, failedLoginCacheKey));
+            await auth.CheckPassword(new Authentication.CheckPasswordRequest(user, request.Password));
 
             if (user.LockoutCount != 0)
             {
                 user.LockoutCount = 0;
             }
 
-            utility.RemoveInMemoryCache(failedLoginCacheKey);
             await userManager.ResetAccessFailedCountAsync(user);
 
             var signInTokenCacheKey = user.Email + SignInTokenCacheKey;

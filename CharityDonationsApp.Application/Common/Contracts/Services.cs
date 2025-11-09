@@ -11,7 +11,5 @@ public static class Authentication
 {
     public record CheckPasswordRequest(
         Domain.Entities.User User,
-        string Password,
-        int FailedLoginAttempts,
-        string FailedLoginCacheKey);
+        string Password);
 }

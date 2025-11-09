@@ -30,6 +30,7 @@ app.MapScalarApiReference(options =>
         .WithDefaultHttpClient(ScalarTarget.CSharp, ScalarClient.HttpClient)
         .AddPreferredSecuritySchemes("Bearer");
 });
+
 app.UseExceptionHandler();
 app.UseHttpsRedirection();
 app.UseAuthentication();
@@ -40,3 +41,7 @@ using var scope = app.Services.CreateScope();
 await DbSeeder.SeedAsync(scope.ServiceProvider);
 
 app.Run();
+
+public sealed class ApiEntryPoint
+{
+}

@@ -5,5 +5,5 @@ public static class Roles
     public const string Admin = "Admin";
     public const string User = "User";
 
-    public static List<string> RolesList = [Admin, User];
+    public static readonly List<string> List = [Admin, User];
 }

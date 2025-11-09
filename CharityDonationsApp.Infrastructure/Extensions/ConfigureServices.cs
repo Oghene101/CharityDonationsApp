@@ -42,15 +42,14 @@ public static class ConfigureServices
         services.AddSingleton<IDbConnectionFactory>(_ =>
             new SqlConnectionFactory(config.GetConnectionString("DefaultConnection")!));
 
-        services.AddIdentity<User, IdentityRole<Guid>>(
-                options =>
-                {
-                    options.User.RequireUniqueEmail = true;
-                    options.Password.RequiredLength = 8;
-                    options.Lockout.AllowedForNewUsers = true;
-                    options.Lockout.MaxFailedAccessAttempts = 3;
-                    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
-                })
+        services.AddIdentity<User, IdentityRole<Guid>>(options =>
+            {
+                options.User.RequireUniqueEmail = true;
+                options.Password.RequiredLength = 8;
+                options.Lockout.AllowedForNewUsers = true;
+                options.Lockout.MaxFailedAccessAttempts = 3;
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
+            })
             .AddEntityFrameworkStores<AppDbContext>()
             .AddDefaultTokenProviders();
     }
@@ -82,9 +81,8 @@ public static class ConfigureServices
                 ClockSkew = TimeSpan.Zero // no extra time beyond expiration
             });
 
-        services.AddAuthorization();
-        // services.AddAuthorizationBuilder()
-        //     .SetFallbackPolicy(new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build());
+        services.AddAuthorizationBuilder()
+            .AddPolicy(Roles.Admin, policy => policy.RequireRole(Roles.Admin));
     }
 
     private static void AddOptions(this IServiceCollection services)

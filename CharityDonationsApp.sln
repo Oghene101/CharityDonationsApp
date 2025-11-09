@@ -13,7 +13,12 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9A1DEE3A-8664-44EE-8D38-634EC6479114}"
 	ProjectSection(SolutionItems) = preProject
 		Directory.Packages.props = Directory.Packages.props
+		Directory.Build.props = Directory.Build.props
 	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{6370B0A8-3570-4565-A910-4DB8C2A888D4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CharityDonationsApp.Api.IntegrationTests", "CharityDonationsApp.Api.IntegrationTests\CharityDonationsApp.Api.IntegrationTests.csproj", "{C4E58922-8839-46CA-9D28-39351C0C7016}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,11 +42,16 @@ Global
 		{5040C482-608F-490D-95C2-2EB3C3473759}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5040C482-608F-490D-95C2-2EB3C3473759}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5040C482-608F-490D-95C2-2EB3C3473759}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C4E58922-8839-46CA-9D28-39351C0C7016}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C4E58922-8839-46CA-9D28-39351C0C7016}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C4E58922-8839-46CA-9D28-39351C0C7016}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C4E58922-8839-46CA-9D28-39351C0C7016}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{4259D05D-2C67-4C6E-85BB-6B52EFB3EF32} = {7A5DCE79-B7DE-4AEF-A9B6-D83DB10935D8}
 		{149AF786-267C-4BCB-ACD1-9148D822C5C8} = {7A5DCE79-B7DE-4AEF-A9B6-D83DB10935D8}
 		{DCD46C0E-7C1B-45B9-9A99-1C8CF45679AF} = {7A5DCE79-B7DE-4AEF-A9B6-D83DB10935D8}
 		{5040C482-608F-490D-95C2-2EB3C3473759} = {7A5DCE79-B7DE-4AEF-A9B6-D83DB10935D8}
+		{C4E58922-8839-46CA-9D28-39351C0C7016} = {6370B0A8-3570-4565-A910-4DB8C2A888D4}
 	EndGlobalSection
 EndGlobal

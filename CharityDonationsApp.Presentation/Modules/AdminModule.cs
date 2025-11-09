@@ -14,7 +14,6 @@ public class AdminModule : CarterModule
     {
         WithTags("Admin");
         IncludeInOpenApi();
-        RequireAuthorization();
     }
 
     public override void AddRoutes(IEndpointRouteBuilder app)
@@ -23,13 +22,13 @@ public class AdminModule : CarterModule
             .WithName("SendEmailConfirmation")
             .WithSummary("Send email confirmation")
             .WithDescription("Allows an admin to send an email confirmation to a specified user.")
-            .RequireAuthorization(policy => policy.RequireRole(Roles.Admin));
+            .RequireAuthorization(Roles.Admin);
 
         app.MapPatch("/fast-forward-lockout", FastForwardLockOutEndAsync)
             .WithName("FastForwardLockOutEnd")
             .WithSummary("Fast forward lockout end time")
             .WithDescription("Allows an admin to fast forward a user's lockout end time.")
-            .RequireAuthorization(policy => policy.RequireRole(Roles.Admin));
+            .RequireAuthorization(Roles.Admin);
     }
 
     private static async Task<Results<Ok<ApiResponse>, BadRequest<ValidationProblemDetails>>>

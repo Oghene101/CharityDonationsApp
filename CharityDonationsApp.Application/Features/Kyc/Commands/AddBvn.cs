@@ -5,11 +5,11 @@ using CharityDonationsApp.Domain.Entities;
 using FluentValidation;
 using MediatR;
 
-namespace CharityDonationsApp.Application.Features.User.Commands;
+namespace CharityDonationsApp.Application.Features.Kyc.Commands;
 
-public class AddNin
+public static class AddBvn
 {
-    public record Command(string Nin) : IRequest<Result<string>>;
+    public record Command(string Bvn) : IRequest<Result<string>>;
 
     public class Handler(
         IAuthService auth,
@@ -26,33 +26,33 @@ public class AddNin
             {
                 kycVerification = new KycVerification
                 {
-                    NinCipher = request.Nin, NinHash = utility.ComputeSha256Hash(request.Nin),
-                    IsNinSuccessfullyVerified = false, UserId = userId, CreatedBy = userName,
+                    BvnCipher = request.Bvn, BvnHash = utility.ComputeSha256Hash(request.Bvn),
+                    IsBvnSuccessfullyVerified = false, UserId = userId, CreatedBy = userName,
                     UpdatedBy = userName
                 };
                 await uOw.KycVerificationsWriteRepository.AddAsync(kycVerification, cancellationToken);
             }
-            else if (kycVerification.NinCipher is null && kycVerification.NinHash is null)
+            else if (kycVerification.BvnCipher is null && kycVerification.BvnHash is null)
             {
-                kycVerification.NinCipher = request.Nin;
-                kycVerification.NinHash = utility.ComputeSha256Hash(request.Nin);
-                kycVerification.IsNinSuccessfullyVerified = false;
+                kycVerification.BvnCipher = request.Bvn;
+                kycVerification.BvnHash = utility.ComputeSha256Hash(request.Bvn);
+                kycVerification.IsBvnSuccessfullyVerified = false;
                 kycVerification.UpdatedBy = userName;
 
                 uOw.KycVerificationsWriteRepository.Update(kycVerification,
-                    x => x.NinCipher!,
-                    x => x.NinHash!,
-                    x => x.IsNinSuccessfullyVerified!,
+                    x => x.BvnCipher!,
+                    x => x.BvnHash!,
+                    x => x.IsBvnSuccessfullyVerified!,
                     x => x.UpdatedBy);
             }
             else
             {
                 throw ApiException.BadRequest(new Error("User.Error",
-                    "You already have an NIN attached to your profile."));
+                    "You already have a BVN attached to your profile."));
             }
 
             await uOw.SaveChangesAsync(cancellationToken);
-            return Result.Success("Your NIN has been successfully added.");
+            return Result.Success("Your BVN has been successfully added.");
         }
     }
 
@@ -60,10 +60,10 @@ public class AddNin
     {
         public Validator()
         {
-            RuleFor(x => x.Nin)
-                .NotEmpty().WithMessage("NIN is required")
-                .Length(11).WithMessage("NIN is invalid.")
-                .Matches(@"^\d{11}$").WithMessage("NIN must contain only digits.");
+            RuleFor(x => x.Bvn)
+                .NotEmpty().WithMessage("BVN is required")
+                .Length(11).WithMessage("BVN is invalid.")
+                .Matches(@"^\d{11}$").WithMessage("BVN must contain only digits.");
         }
     }
 }

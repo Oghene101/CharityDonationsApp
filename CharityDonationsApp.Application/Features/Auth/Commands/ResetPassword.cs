@@ -3,15 +3,16 @@ using CharityDonationsApp.Application.Common.Exceptions;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using User = CharityDonationsApp.Domain.Entities.User;
 
 namespace CharityDonationsApp.Application.Features.Auth.Commands;
 
-public static class ResetPasswordRequest
+public static class ResetPassword
 {
     public record Command(string Email, string Token, string NewPassword) : IRequest<Result<string>>;
 
     public class Handler(
-        UserManager<Domain.Entities.User> userManager) : IRequestHandler<Command, Result<string>>
+        UserManager<User> userManager) : IRequestHandler<Command, Result<string>>
     {
         public async Task<Result<string>> Handle(Command request, CancellationToken cancellationToken)
         {

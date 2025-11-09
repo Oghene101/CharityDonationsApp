@@ -6,7 +6,7 @@ using CharityDonationsApp.Domain.Entities;
 using FluentValidation;
 using MediatR;
 
-namespace CharityDonationsApp.Application.Features.User.Commands;
+namespace CharityDonationsApp.Application.Features.Kyc.Commands;
 
 public static class AddAddress
 {

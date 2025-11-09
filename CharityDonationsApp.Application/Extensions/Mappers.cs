@@ -2,7 +2,7 @@ using CharityDonationsApp.Application.Common.Contracts;
 using CharityDonationsApp.Application.Features.Admin.Commands;
 using CharityDonationsApp.Application.Features.Auth;
 using CharityDonationsApp.Application.Features.Auth.Commands;
-using CharityDonationsApp.Application.Features.User.Commands;
+using CharityDonationsApp.Application.Features.Kyc.Commands;
 using CharityDonationsApp.Domain.Entities;
 using RefreshToken = CharityDonationsApp.Application.Features.Auth.Commands.RefreshToken;
 using User = CharityDonationsApp.Domain.Entities.User;
@@ -60,7 +60,7 @@ public static class Mappers
     public static ForgotPassword.Command ToCommand(this Auth.ForgotPasswordRequest dto)
         => new(dto.Email);
 
-    public static ResetPasswordRequest.Command ToCommand(this Auth.ResetPasswordRequest dto)
+    public static ResetPassword.Command ToCommand(this Auth.ResetPasswordRequest dto)
         => new(dto.Email, dto.Token, dto.NewPassword);
 
     #endregion
