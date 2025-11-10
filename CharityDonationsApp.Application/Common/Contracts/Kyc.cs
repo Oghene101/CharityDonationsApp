@@ -1,6 +1,6 @@
 namespace CharityDonationsApp.Application.Common.Contracts;
 
-public static class User
+public static class Kyc
 {
     public record AddBvnRequest(string Bvn);
 

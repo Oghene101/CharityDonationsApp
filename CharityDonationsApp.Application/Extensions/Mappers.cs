@@ -67,13 +67,13 @@ public static class Mappers
 
     #region User
 
-    public static AddBvn.Command ToCommand(this Common.Contracts.User.AddBvnRequest dto)
+    public static AddBvn.Command ToCommand(this Kyc.AddBvnRequest dto)
         => new(dto.Bvn);
 
-    public static AddNin.Command ToCommand(this Common.Contracts.User.AddNinRequest dto)
+    public static AddNin.Command ToCommand(this Kyc.AddNinRequest dto)
         => new(dto.Nin);
 
-    public static AddAddress.Command ToCommand(this Common.Contracts.User.AddAddressRequest dto)
+    public static AddAddress.Command ToCommand(this Kyc.AddAddressRequest dto)
         => new(dto.HouseNumber, dto.Landmark, dto.Street, dto.Lga, dto.City, dto.State, dto.Country);
 
     #endregion

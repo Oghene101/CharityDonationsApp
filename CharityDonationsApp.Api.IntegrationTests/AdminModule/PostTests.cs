@@ -16,7 +16,7 @@ public class PostTests(ApiFactory<ApiEntryPoint> factory) : IClassFixture<ApiFac
     [Fact]
     public async Task SendEmailConfirmation_ReturnsOk_WhenEmailConfirmationHasBeenSent()
     {
-        var request = new Admin.SendEmailConfirmationRequest("karierenogheneruemu@gmail.com");
+        var request = new Admin.SendEmailConfirmationRequest("karierenogheneruemu2020@gmail.com");
 
         var response = await _httpClient.PostAsJsonAsync("/api/admin/send-email-confirmation", request);
 

@@ -5,23 +5,24 @@ using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using User = CharityDonationsApp.Domain.Entities.User;
+using SignInResponse = CharityDonationsApp.Application.Common.Contracts.Auth.SignInResponse;
 
 namespace CharityDonationsApp.Application.Features.Auth.Commands;
 
 public static class SignIn
 {
-    public record Command(string Email, string Password) : IRequest<Result<Common.Contracts.Auth.SignInResponse>>;
+    public record Command(string Email, string Password) : IRequest<Result<SignInResponse>>;
 
     public class Handler(
         UserManager<User> userManager,
         IJwtService jwt,
         IAuthService auth,
-        IUtilityService utility) : IRequestHandler<Command, Result<Common.Contracts.Auth.SignInResponse>>
+        IUtilityService utility) : IRequestHandler<Command, Result<SignInResponse>>
     {
         private const string SignInTokenCacheKey = "UserAuthToken";
         private const string UserRolesCacheKey = "UserRoles";
 
-        public async Task<Result<Common.Contracts.Auth.SignInResponse>> Handle(Command request,
+        public async Task<Result<SignInResponse>> Handle(Command request,
             CancellationToken cancellationToken)
         {
             var user = await userManager.FindByEmailAsync(request.Email);
@@ -57,7 +58,7 @@ public static class SignIn
                 utility.SetInMemoryCache(userRolesCacheKey, roles, absoluteExpirationRelativeToNow);
             }
 
-            return Result.Success(new Common.Contracts.Auth.SignInResponse(user.Id, roles!, generateTokenResponse!));
+            return Result.Success(new SignInResponse(user.Id, roles!, generateTokenResponse!));
         }
     }
 

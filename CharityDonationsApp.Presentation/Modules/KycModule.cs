@@ -4,7 +4,6 @@ using CharityDonationsApp.Application.Extensions;
 using MediatR;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using User = CharityDonationsApp.Application.Common.Contracts.User;
 
 namespace CharityDonationsApp.Presentation.Modules;
 
@@ -29,14 +28,14 @@ public class KycModule : CarterModule
             .WithSummary("Add NIN to user profile")
             .WithDescription("Associates a NIN with the authenticated user's account.");
 
-        app.MapPost("/add-Address", AddAddressAsync)
+        app.MapPost("/add-address", AddAddressAsync)
             .WithName("AddAddress")
             .WithSummary("Add Address to user profile")
             .WithDescription("Associates an address with the authenticated user's account.");
     }
 
     private static async Task<Results<Ok<ApiResponse>, BadRequest<ValidationProblemDetails>>> AddBvnAsync(
-        User.AddBvnRequest request,
+        Kyc.AddBvnRequest request,
         ISender sender, CancellationToken cancellationToken)
     {
         var command = request.ToCommand();
@@ -47,7 +46,7 @@ public class KycModule : CarterModule
     }
 
     private static async Task<Results<Ok<ApiResponse>, BadRequest<ValidationProblemDetails>>> AddNinAsync(
-        User.AddNinRequest request,
+        Kyc.AddNinRequest request,
         ISender sender, CancellationToken cancellationToken)
     {
         var command = request.ToCommand();
@@ -58,7 +57,7 @@ public class KycModule : CarterModule
     }
 
     private static async Task<Results<Ok<ApiResponse>, BadRequest<ValidationProblemDetails>>> AddAddressAsync(
-        User.AddAddressRequest request,
+        Kyc.AddAddressRequest request,
         ISender sender, CancellationToken cancellationToken)
     {
         var command = request.ToCommand();

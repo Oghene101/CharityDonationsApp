@@ -4,8 +4,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Options;
 
 namespace CharityDonationsApp.Api.IntegrationTests;
 
@@ -15,7 +13,7 @@ public class ApiFactory<TEntryPoint> : WebApplicationFactory<TEntryPoint> where 
     {
         builder.ConfigureServices(services =>
         {
-            services.RemoveAll<IConfigureOptions<AuthenticationOptions>>();
+            // services.RemoveAll<IConfigureOptions<AuthenticationOptions>>();
 
             services.AddAuthentication("Test")
                 .AddScheme<AuthenticationSchemeOptions, AuthHandler>("Test", _ => { });

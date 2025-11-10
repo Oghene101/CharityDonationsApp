@@ -16,7 +16,7 @@ public class PatchTests(ApiFactory<ApiEntryPoint> factory) : IClassFixture<ApiFa
     [Fact]
     public async Task FastForwardLockout_ReturnsOk_WhenLockoutTimeHasBeenBroughtForward()
     {
-        var fastForwardLockOutEndRequest = new Admin.FastForwardLockOutEndRequest("karierenogheneruemu@gmail.com");
+        var fastForwardLockOutEndRequest = new Admin.FastForwardLockOutEndRequest("karierenogheneruemu2020@gmail.com");
 
         var fastForwardLockOutEndResponse = await _httpClient.PatchAsJsonAsync("/api/admin/fast-forward-lockout",
             fastForwardLockOutEndRequest);
