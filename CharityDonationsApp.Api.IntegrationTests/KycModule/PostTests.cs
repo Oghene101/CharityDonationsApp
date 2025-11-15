@@ -13,7 +13,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Polly;
 using Xunit.Abstractions;
-using ApiResponse = CharityDonationsApp.Api.IntegrationTests.Dtos.ApiResponse;
 
 namespace CharityDonationsApp.Api.IntegrationTests.KycModule;
 
@@ -196,7 +195,6 @@ public class PostTests(
 
         var kycVerification = await uOw.KycVerificationsReadRepository.GetKycVerificationAsync(user!.Id);
         await dbContext.Addresses.Where(x => x.KycVerificationId == kycVerification!.Id).ExecuteDeleteAsync();
-        await uOw.SaveChangesAsync();
     }
 
     [Fact]
@@ -243,7 +241,6 @@ public class PostTests(
 
         var kycVerification = await uOw.KycVerificationsReadRepository.GetKycVerificationAsync(user!.Id);
         await dbContext.Addresses.Where(x => x.KycVerificationId == kycVerification!.Id).ExecuteDeleteAsync();
-        await uOw.SaveChangesAsync();
     }
 
     #endregion

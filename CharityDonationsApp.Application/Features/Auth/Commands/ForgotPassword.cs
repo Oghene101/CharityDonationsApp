@@ -1,18 +1,19 @@
 using CharityDonationsApp.Application.Common.Contracts;
 using CharityDonationsApp.Application.Common.Contracts.Abstractions;
 using CharityDonationsApp.Application.Common.Exceptions;
+using CharityDonationsApp.Domain.Entities;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 
-namespace CharityDonationsApp.Application.Features.Auth;
+namespace CharityDonationsApp.Application.Features.Auth.Commands;
 
 public static class ForgotPassword
 {
     public record Command(string Email) : IRequest<Result<string>>;
 
     public class Handler(
-        UserManager<Domain.Entities.User> userManager,
+        UserManager<User> userManager,
         IAuthService auth) : IRequestHandler<Command, Result<string>>
     {
         public async Task<Result<string>> Handle(Command request, CancellationToken cancellationToken)

@@ -3,7 +3,6 @@ using System.Net.Http.Json;
 using CharityDonationsApp.Application.Common.Contracts;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
-using ApiResponse = CharityDonationsApp.Api.IntegrationTests.Dtos.ApiResponse;
 
 namespace CharityDonationsApp.Api.IntegrationTests.AdminModule;
 
@@ -11,7 +10,7 @@ public class PatchTests(ApiFactory<ApiEntryPoint> factory) : IClassFixture<ApiFa
 {
     private readonly HttpClient _httpClient = factory.CreateClient();
 
-    #region FastForwardLockout
+    #region Fast Forward Lockout
 
     [Fact]
     public async Task FastForwardLockout_ReturnsOk_WhenLockoutTimeHasBeenBroughtForward()

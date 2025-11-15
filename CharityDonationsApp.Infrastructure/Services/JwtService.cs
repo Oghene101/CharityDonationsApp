@@ -90,7 +90,6 @@ public class JwtService(
             ValidateLifetime = false, // allow expired token for refresh flow
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new RsaSecurityKey(rsa),
-            ClockSkew = TimeSpan.Zero // no extra time beyond expiration
         };
 
         var principal = tokenHandler.ValidateToken(accessToken, tokenValidationParameters, out var validatedToken);

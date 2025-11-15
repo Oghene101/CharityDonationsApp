@@ -3,7 +3,6 @@ using System.Net.Http.Json;
 using CharityDonationsApp.Application.Common.Contracts;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
-using ApiResponse = CharityDonationsApp.Api.IntegrationTests.Dtos.ApiResponse;
 
 namespace CharityDonationsApp.Api.IntegrationTests.AdminModule;
 

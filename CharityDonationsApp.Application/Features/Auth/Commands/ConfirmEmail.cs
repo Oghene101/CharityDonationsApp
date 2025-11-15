@@ -1,5 +1,6 @@
 using CharityDonationsApp.Application.Common.Contracts;
 using CharityDonationsApp.Application.Common.Exceptions;
+using CharityDonationsApp.Domain.Entities;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -11,7 +12,7 @@ public static class ConfirmEmail
     public record Command(string Email, string Token) : IRequest<Result<string>>;
 
     public class Handler(
-        UserManager<Domain.Entities.User> userManager) : IRequestHandler<Command, Result<string>>
+        UserManager<User> userManager) : IRequestHandler<Command, Result<string>>
     {
         public async Task<Result<string>> Handle(Command request, CancellationToken cancellationToken)
         {
@@ -24,7 +25,7 @@ public static class ConfirmEmail
             if (user.EmailConfirmed) return Result.Success("Your email has already been confirmed.");
 
             var result = await userManager.ConfirmEmailAsync(user, token);
-            if (result.Succeeded is false)
+            if (!result.Succeeded)
                 throw ApiException.BadRequest(result.Errors.Select(e => new Error(e.Code, e.Description))
                     .ToArray());
 

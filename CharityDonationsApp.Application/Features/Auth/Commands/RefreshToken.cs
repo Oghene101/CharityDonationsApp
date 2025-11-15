@@ -2,6 +2,7 @@ using System.Security.Claims;
 using CharityDonationsApp.Application.Common.Contracts;
 using CharityDonationsApp.Application.Common.Contracts.Abstractions;
 using CharityDonationsApp.Application.Common.Exceptions;
+using CharityDonationsApp.Domain.Entities;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -14,16 +15,26 @@ public static class RefreshToken
 
     public class Handler(
         IJwtService jwt,
-        UserManager<Domain.Entities.User> userManager,
+        UserManager<User> userManager,
         IUnitOfWork uOw) : IRequestHandler<Command, Result<Jwt.GenerateTokenResponse>>
     {
         public async Task<Result<Jwt.GenerateTokenResponse>> Handle(Command request,
             CancellationToken cancellationToken)
         {
-            var principal = jwt.GetPrincipalFromExpiredToken(request.AccessToken);
-            var email = principal.FindFirst(x => x.Type == ClaimTypes.Email)!.Value;
+            ClaimsPrincipal principal;
+            ClaimsIdentity identity;
+            try
+            {
+                principal = jwt.GetPrincipalFromExpiredToken(request.AccessToken);
+            }
+            catch (Exception)
+            {
+                throw ApiException.Unauthorized(new Error("Auth.Error", "Invalid token"));
+            }
 
-            var user = await userManager.FindByEmailAsync(email);
+            var email = principal.FindFirstValue(ClaimTypes.Email);
+
+            var user = await userManager.FindByEmailAsync(email!);
             if (user is null) throw ApiException.Unauthorized(new Error("Auth.Error", "Invalid token"));
 
             var refreshToken = await uOw.RefreshTokensReadRepository.GetRefreshTokenAsync(request.RefreshToken);

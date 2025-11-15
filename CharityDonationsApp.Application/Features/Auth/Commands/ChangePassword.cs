@@ -1,6 +1,7 @@
 using CharityDonationsApp.Application.Common.Contracts;
 using CharityDonationsApp.Application.Common.Contracts.Abstractions;
 using CharityDonationsApp.Application.Common.Exceptions;
+using CharityDonationsApp.Domain.Entities;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -14,7 +15,7 @@ public static class ChangePassword
         string NewPassword) : IRequest<Result<string>>;
 
     public class Handler(
-        UserManager<Domain.Entities.User> userManager,
+        UserManager<User> userManager,
         IAuthService auth,
         IUnitOfWork uOw) : IRequestHandler<Command, Result<string>>
     {
@@ -23,14 +24,14 @@ public static class ChangePassword
             var email = auth.GetSignedInUserEmail();
 
             var user = await userManager.FindByEmailAsync(email);
-            if (user is null) throw ApiException.NotFound(new Error("Auth.Error", $"User with '{email}' not found"));
+            if (user is null) throw ApiException.BadRequest(new Error("Auth.Error", "Invalid request"));
 
             var isCorrectPassword = await userManager.CheckPasswordAsync(user, request.OldPassword);
-            if (isCorrectPassword is false)
+            if (!isCorrectPassword)
                 throw ApiException.BadRequest(new Error("Auth.Error", "Invalid request"));
 
             var result = await userManager.ChangePasswordAsync(user, request.OldPassword, request.NewPassword);
-            if (result.Succeeded is false)
+            if (!result.Succeeded)
                 throw ApiException.BadRequest(result.Errors.Select(e => new Error(e.Code, e.Description)).ToArray());
 
             user.UpdatedBy = $"{user.FirstName} {user.LastName}";

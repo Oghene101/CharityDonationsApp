@@ -24,7 +24,7 @@ public class AuthModule : CarterModule
             .WithDescription("Creates a user account with credentials for authentication.")
             .AllowAnonymous();
 
-        app.MapGet("/confirm-email", ConfirmEmailAsync)
+        app.MapPost("/confirm-email", ConfirmEmailAsync)
             .WithName("ConfirmEmail")
             .WithSummary("Confirm user email")
             .WithDescription("Confirms a user's email using the confirmation token.")
@@ -72,7 +72,7 @@ public class AuthModule : CarterModule
     }
 
     private static async Task<Results<Ok<ApiResponse>, BadRequest<ValidationProblemDetails>>> ConfirmEmailAsync(
-        [AsParameters] Auth.ConfirmEmailRequest request,
+        Auth.ConfirmEmailRequest request,
         ISender sender, CancellationToken cancellationToken)
     {
         var command = request.ToCommand();
