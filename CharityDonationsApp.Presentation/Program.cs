@@ -3,6 +3,7 @@ using CharityDonationsApp.Application.Extensions;
 using CharityDonationsApp.Infrastructure.Extensions;
 using CharityDonationsApp.Infrastructure.Persistence;
 using CharityDonationsApp.Presentation.Extensions;
+using CharityDonationsApp.Presentation.Middleware;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -33,6 +34,7 @@ app.MapScalarApiReference(options =>
 
 app.UseExceptionHandler();
 app.UseHttpsRedirection();
+app.UseMiddleware<TimingMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapCarter();

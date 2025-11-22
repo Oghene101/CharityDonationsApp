@@ -4,6 +4,7 @@ using CharityDonationsApp.Application.Common.Exceptions;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using User = CharityDonationsApp.Domain.Entities.User;
 
 namespace CharityDonationsApp.Application.Features.Admin.Commands;
 
@@ -12,7 +13,7 @@ public static class SendEmailConfirmation
     public record Command(string Email) : IRequest<Result<string>>;
 
     public class Handler(
-        UserManager<Domain.Entities.User> userManager,
+        UserManager<User> userManager,
         IAuthService auth) : IRequestHandler<Command, Result<string>>
     {
         public async Task<Result<string>> Handle(Command request, CancellationToken cancellationToken)

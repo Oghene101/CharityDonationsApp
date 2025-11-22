@@ -37,7 +37,7 @@ public class PostTests(ApiFactory<ApiEntryPoint> factory) : IClassFixture<ApiFac
     [Fact]
     public async Task SendEmailConfirmation_ReturnsBadRequest_WhenEmailIsInValid()
     {
-        var request = new Admin.SendEmailConfirmationRequest("R011846904");
+        var request = new Admin.SendEmailConfirmationRequest("invalidmail");
 
         var response = await _httpClient.PostAsJsonAsync("/api/admin/send-email-confirmation", request);
 
