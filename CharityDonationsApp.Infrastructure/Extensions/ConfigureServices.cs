@@ -110,6 +110,10 @@ public static class ConfigureServices
         services.AddOptions<AlatPaySettings>()
             .BindConfiguration(AlatPaySettings.Path)
             .ValidateOnStart();
+
+        services.AddOptions<SeedSettings>()
+            .BindConfiguration(SeedSettings.Path)
+            .ValidateOnStart();
     }
 
     private static void AddServices(this IServiceCollection services)

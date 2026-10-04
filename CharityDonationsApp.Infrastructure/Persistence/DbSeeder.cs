@@ -1,7 +1,9 @@
 using CharityDonationsApp.Domain.Constants;
 using CharityDonationsApp.Domain.Entities;
+using CharityDonationsApp.Infrastructure.Configurations;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace CharityDonationsApp.Infrastructure.Persistence;
 
@@ -12,6 +14,7 @@ public static class DbSeeder
         using var scope = serviceProvider.CreateScope();
         var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
         var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
+        var seed = scope.ServiceProvider.GetRequiredService<IOptions<SeedSettings>>().Value;
 
         // Ensure roles exist
         foreach (var role in Roles.List)
@@ -23,57 +26,39 @@ public static class DbSeeder
         }
 
         // Seed an admin user
-        var admins = await userManager.GetUsersInRoleAsync(Roles.Admin);
-        if (admins.Count == 0)
-        {
-            var adminEmail = "admin@example.com";
-            var admin = new User
-            {
-                FirstName = "Admin",
-                LastName = "Test",
-                UserName = adminEmail,
-                Email = adminEmail,
-                EmailConfirmed = true,
-                CreatedBy = "Seeder",
-                UpdatedBy = "Seeder",
-            };
-
-            var result = await userManager.CreateAsync(admin, "Admin@123"); // secure password
-            if (result.Succeeded)
-            {
-                await userManager.AddToRoleAsync(admin, Roles.Admin);
-            }
-            else
-            {
-                throw new Exception(string.Join(", ", result.Errors.Select(e => e.Description)));
-            }
-        }
+        await SeedAccountAsync(userManager, Roles.Admin, seed.Admin);
 
         // Seed a user
-        var users = await userManager.GetUsersInRoleAsync(Roles.User);
-        if (users.Count == 0)
-        {
-            var userEmail = "user@example.com";
-            var user = new User
-            {
-                FirstName = "User",
-                LastName = "Test",
-                UserName = userEmail,
-                Email = userEmail,
-                EmailConfirmed = true,
-                CreatedBy = "Seeder",
-                UpdatedBy = "Seeder",
-            };
+        await SeedAccountAsync(userManager, Roles.User, seed.User);
+    }
 
-            var result = await userManager.CreateAsync(user, "User@123"); // secure password
-            if (result.Succeeded)
-            {
-                await userManager.AddToRoleAsync(user, Roles.User);
-            }
-            else
-            {
-                throw new Exception(string.Join(", ", result.Errors.Select(e => e.Description)));
-            }
+    // Accounts are only seeded when credentials are configured and the role has no members yet
+    private static async Task SeedAccountAsync(UserManager<User> userManager, string role, SeedAccount account)
+    {
+        if (string.IsNullOrWhiteSpace(account.Email) || string.IsNullOrWhiteSpace(account.Password)) return;
+
+        var existing = await userManager.GetUsersInRoleAsync(role);
+        if (existing.Count != 0) return;
+
+        var user = new User
+        {
+            FirstName = role,
+            LastName = "Test",
+            UserName = account.Email,
+            Email = account.Email,
+            EmailConfirmed = true,
+            CreatedBy = "Seeder",
+            UpdatedBy = "Seeder",
+        };
+
+        var result = await userManager.CreateAsync(user, account.Password);
+        if (result.Succeeded)
+        {
+            await userManager.AddToRoleAsync(user, role);
+        }
+        else
+        {
+            throw new Exception(string.Join(", ", result.Errors.Select(e => e.Description)));
         }
     }
 }
