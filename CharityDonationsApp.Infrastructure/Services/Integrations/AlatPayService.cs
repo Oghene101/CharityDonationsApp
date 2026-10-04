@@ -29,7 +29,7 @@ public class AlatPayService(
     public async Task<AlatPayApiResponse<AlatPayAuthenticateCardData>> AuthenticateCardAsync(
         AlatPayAuthenticateCardRequest request, CancellationToken ct = default)
     {
-        var endpoint = _alatPay.InitializeCardEndpoint;
+        var endpoint = _alatPay.AuthenticateCardEndpoint;
 
         var result = await apiClient
             .PostAsync<AlatPayAuthenticateCardRequest, AlatPayApiResponse<AlatPayAuthenticateCardData>>(
