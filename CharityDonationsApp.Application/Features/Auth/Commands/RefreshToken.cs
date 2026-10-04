@@ -37,14 +37,13 @@ public static class RefreshToken
             var user = await userManager.FindByEmailAsync(email!);
             if (user is null) throw ApiException.Unauthorized(new Error("Auth.Error", "Invalid token"));
 
-            var refreshToken = await uOw.RefreshTokensReadRepository.GetRefreshTokenAsync(request.RefreshToken);
-            if (refreshToken is null || refreshToken.UserId != user.Id)
-                throw ApiException.Unauthorized(new Error("Auth.Error", "Invalid token"));
+            var isConsumed = await uOw.RefreshTokensReadRepository.ConsumeRefreshTokenAsync(
+                request.RefreshToken, user.Id, $"{user.FirstName} {user.LastName}");
+            if (!isConsumed) throw ApiException.Unauthorized(new Error("Auth.Error", "Invalid token"));
 
             var roles = await userManager.GetRolesAsync(user);
             var token = await jwt.GenerateToken(new Jwt.GenerateTokenRequest(user, roles), cancellationToken);
 
-            // todo: update refresh token auditables and mark as used & revoked
             return Result.Success(token);
         }
     }

@@ -5,4 +5,5 @@ namespace CharityDonationsApp.Application.Common.Contracts.Abstractions.Reposito
 public interface IRefreshTokenRepository
 {
     Task<RefreshToken?> GetRefreshTokenAsync(string token);
+    Task<bool> ConsumeRefreshTokenAsync(string token, Guid userId, string updatedBy);
 }
