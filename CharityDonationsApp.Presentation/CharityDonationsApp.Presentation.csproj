@@ -1,5 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
+    <PropertyGroup>
+        <UserSecretsId>1fea4b5e-0c38-4848-b0ad-821f3013d015</UserSecretsId>
+    </PropertyGroup>
+
     <ItemGroup>
         <PackageReference Include="Microsoft.CodeAnalysis.Common" PrivateAssets="all"/>
         <PackageReference Include="Microsoft.CodeAnalysis.CSharp" PrivateAssets="all"/>
