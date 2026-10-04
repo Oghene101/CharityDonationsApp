@@ -7,6 +7,10 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
+COPY ["Directory.Build.props", "Directory.Packages.props", "./"]
+COPY ["CharityDonationsApp.Domain/CharityDonationsApp.Domain.csproj", "CharityDonationsApp.Domain/"]
+COPY ["CharityDonationsApp.Application/CharityDonationsApp.Application.csproj", "CharityDonationsApp.Application/"]
+COPY ["CharityDonationsApp.Infrastructure/CharityDonationsApp.Infrastructure.csproj", "CharityDonationsApp.Infrastructure/"]
 COPY ["CharityDonationsApp.Presentation/CharityDonationsApp.Presentation.csproj", "CharityDonationsApp.Presentation/"]
 RUN dotnet restore "CharityDonationsApp.Presentation/CharityDonationsApp.Presentation.csproj"
 COPY . .
