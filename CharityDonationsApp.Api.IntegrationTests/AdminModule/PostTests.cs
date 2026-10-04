@@ -6,7 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CharityDonationsApp.Api.IntegrationTests.AdminModule;
 
-public class PostTests(ApiFactory<ApiEntryPoint> factory) : IClassFixture<ApiFactory<ApiEntryPoint>>
+[Collection(ApiCollection.Name)]
+public class PostTests(ApiFactory<ApiEntryPoint> factory)
 {
     private readonly HttpClient _httpClient = factory.CreateClient();
 
@@ -15,7 +16,7 @@ public class PostTests(ApiFactory<ApiEntryPoint> factory) : IClassFixture<ApiFac
     [Fact]
     public async Task SendEmailConfirmation_ReturnsOk_WhenEmailConfirmationHasBeenSent()
     {
-        var request = new Admin.SendEmailConfirmationRequest("karierenogheneruemu2020@gmail.com");
+        var request = new Admin.SendEmailConfirmationRequest(TestUser.Email);
 
         var response = await _httpClient.PostAsJsonAsync("/api/admin/send-email-confirmation", request);
 

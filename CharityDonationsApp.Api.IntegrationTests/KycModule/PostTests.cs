@@ -16,9 +16,10 @@ using Xunit.Abstractions;
 
 namespace CharityDonationsApp.Api.IntegrationTests.KycModule;
 
+[Collection(ApiCollection.Name)]
 public class PostTests(
     ApiFactory<ApiEntryPoint> factory,
-    ITestOutputHelper testOutputHelper) : IClassFixture<ApiFactory<ApiEntryPoint>>
+    ITestOutputHelper testOutputHelper)
 {
     private readonly HttpClient _httpClient = factory.CreateClient();
 
@@ -33,7 +34,7 @@ public class PostTests(
         var uOw = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
         var request = new Kyc.AddBvnRequest("12345678910");
 
-        var user = await userManager.FindByEmailAsync("karierenogheneruemu2020@gmail.com");
+        var user = await userManager.FindByEmailAsync(TestUser.Email);
         var roles = await userManager.GetRolesAsync(user!);
         var generateTokenResponse = await jwt.GenerateToken(new Jwt.GenerateTokenRequest(user!, roles));
         _httpClient.DefaultRequestHeaders.Authorization =
@@ -70,7 +71,7 @@ public class PostTests(
                 });
         var request = new Kyc.AddBvnRequest("12345678910");
 
-        var user = await userManager.FindByEmailAsync("karierenogheneruemu2020@gmail.com");
+        var user = await userManager.FindByEmailAsync(TestUser.Email);
         var roles = await userManager.GetRolesAsync(user!);
         var generateTokenResponse = await jwt.GenerateToken(new Jwt.GenerateTokenRequest(user!, roles));
         _httpClient.DefaultRequestHeaders.Authorization =
@@ -104,7 +105,7 @@ public class PostTests(
         var uOw = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
         var request = new Kyc.AddNinRequest("12345678910");
 
-        var user = await userManager.FindByEmailAsync("karierenogheneruemu2020@gmail.com");
+        var user = await userManager.FindByEmailAsync(TestUser.Email);
         var roles = await userManager.GetRolesAsync(user!);
         var generateTokenResponse = await jwt.GenerateToken(new Jwt.GenerateTokenRequest(user!, roles));
         _httpClient.DefaultRequestHeaders.Authorization =
@@ -141,7 +142,7 @@ public class PostTests(
                 });
         var request = new Kyc.AddNinRequest("12345678910");
 
-        var user = await userManager.FindByEmailAsync("karierenogheneruemu2020@gmail.com");
+        var user = await userManager.FindByEmailAsync(TestUser.Email);
         var roles = await userManager.GetRolesAsync(user!);
         var generateTokenResponse = await jwt.GenerateToken(new Jwt.GenerateTokenRequest(user!, roles));
         _httpClient.DefaultRequestHeaders.Authorization =
@@ -183,7 +184,7 @@ public class PostTests(
             "Lagos",
             "Nigeria");
 
-        var user = await userManager.FindByEmailAsync("karierenogheneruemu2020@gmail.com");
+        var user = await userManager.FindByEmailAsync(TestUser.Email);
         var roles = await userManager.GetRolesAsync(user!);
         var generateTokenResponse = await jwt.GenerateToken(new Jwt.GenerateTokenRequest(user!, roles));
         _httpClient.DefaultRequestHeaders.Authorization =
@@ -225,7 +226,7 @@ public class PostTests(
             "Lagos",
             "Nigeria");
 
-        var user = await userManager.FindByEmailAsync("karierenogheneruemu2020@gmail.com");
+        var user = await userManager.FindByEmailAsync(TestUser.Email);
         var roles = await userManager.GetRolesAsync(user!);
         var generateTokenResponse = await jwt.GenerateToken(new Jwt.GenerateTokenRequest(user!, roles));
         _httpClient.DefaultRequestHeaders.Authorization =
